@@ -1,0 +1,56 @@
+set(CMAKE_SYSTEM_NAME Generic)
+set(CMAKE_SYSTEM_PROCESSOR arm)
+
+file(TO_CMAKE_PATH "$ENV{COMPILER_PATH}" GHS_BASE)
+
+if("${CMAKE_HOST_SYSTEM}" MATCHES "Windows*")
+  set(TOOLS_SUFFIX ".exe")
+endif()
+
+set(COMMON_FLAGS "-cpu=cortexm7 -Ogeneral -data_delete -g -dual_debug --gnu_asm -delete  --inline_tiny_functions -no_misalign_pack -thumb -thumb_lib -stdlib")
+
+set(CMAKE_C_LINK_FLAGS "-L${GHS_BASE}/lib/thumb2 -YL,${GHS_BASE}/lib/thumb2 -nostartfiles")
+
+SET(CMAKE_AR           "${GHS_BASE}/ax${TOOLS_SUFFIX}"      	CACHE PATH "GHS ar program")
+SET(CMAKE_NM           "${GHS_BASE}/gnm${TOOLS_SUFFIX}"     	CACHE PATH "GHS nm program")
+SET(CMAKE_LINKER       "${GHS_BASE}/elxr${TOOLS_SUFFIX}"    	CACHE PATH "GHS linker program")
+SET(CMAKE_GM           "${GHS_BASE}/gmemfile${TOOLS_SUFFIX}"    CACHE PATH "GHS gmemfile program")
+
+set(CMAKE_ASM_SOURCE_FILE_EXTENSIONS s;S;asm;arm)
+
+# C compiler and default flags
+SET(CMAKE_C_COMPILER               "${GHS_BASE}/cc${CMAKE_SYSTEM_PROCESSOR}${TOOLS_SUFFIX}")
+set(CMAKE_C_FLAGS                  "${CMAKE_C_FLAGS} ${COMMON_FLAGS} -std=c99")
+set(CMAKE_C_FLAGS_DEBUG            "${CMAKE_C_FLAGS} -g -dual_debug -D_DEBUG")
+set(CMAKE_C_FLAGS_RELEASE          "${CMAKE_C_FLAGS} -O2 -DNDEBUG")
+set(CMAKE_C_FLAGS_RELWITHDEBINFO   "${CMAKE_C_FLAGS} -O2 -g")
+
+set(CMAKE_C_RESPONSE_FILE_LINK_FLAG "@")
+set(CMAKE_C_USE_RESPONSE_FILE_FOR_OBJECTS 1)
+set(CMAKE_C_CREATE_STATIC_LIBRARY  "<CMAKE_C_COMPILER> <LINK_FLAGS> <OBJECTS> -merge_archive -o <TARGET>")
+set(CMAKE_C_LINK_EXECUTABLE        "<CMAKE_C_COMPILER> -MD <CMAKE_C_LINK_FLAGS>  <LINK_FLAGS> <OBJECTS> <LINK_LIBRARIES>  -o <TARGET>.elf ")
+
+# C++ compiler and default flags
+SET(CMAKE_CXX_COMPILER             "${GHS_BASE}/cx${CMAKE_SYSTEM_PROCESSOR}${TOOLS_SUFFIX}")
+set(CMAKE_CXX_FLAGS                "${CMAKE_CXX_FLAGS} ${COMMON_FLAGS} -std=c++11 --no_rtti")
+set(CMAKE_CXX_FLAGS_DEBUG          "${CMAKE_CXX_FLAGS} -g -dual_debug -D_DEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE        "${CMAKE_CXX_FLAGS} -O2 -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS} -O2 -g")
+
+set(CMAKE_CXX_RESPONSE_FILE_LINK_FLAG "@")
+set(CMAKE_CXX_USE_RESPONSE_FILE_FOR_OBJECTS 1)
+set(CMAKE_CXX_CREATE_STATIC_LIBRARY  "<CMAKE_CXX_COMPILER> <LINK_FLAGS> <OBJECTS> -merge_archive -o <TARGET>")
+set(CMAKE_CXX_LINK_EXECUTABLE        "<CMAKE_CXX_COMPILER> -MD <CMAKE_CXX_LINK_FLAGS>  <LINK_FLAGS> <OBJECTS> <LINK_LIBRARIES>  -o <TARGET>.elf ")
+
+# ASM compiler and default flags
+SET(CMAKE_ASM_COMPILER             "${GHS_BASE}/as${CMAKE_SYSTEM_PROCESSOR}${TOOLS_SUFFIX}")
+set(CMAKE_ASM_FLAGS                "${CMAKE_ASM_FLAGS} -cpu=cortexm7 -g --gnu_asm")
+set(CMAKE_ASM_FLAGS_DEBUG          "${CMAKE_ASM_FLAGS} -g -dual_debug -D_DEBUG")
+set(CMAKE_ASM_FLAGS_RELEASE        "${CMAKE_ASM_FLAGS} -O2 -DNDEBUG")
+set(CMAKE_ASM_FLAGS_RELWITHDEBINFO "${CMAKE_ASM_FLAGS} -O2 -g")
+
+set(ASM_DIALECT)
+set(CMAKE_ASM_OUTPUT_EXTENSION .o)
+set(CMAKE_ASM_OUTPUT_EXTENSION_REPLACE 1)
+set(CMAKE_ASM_CREATE_STATIC_LIBRARY   "<CMAKE_C_COMPILER>  <LINK_FLAGS> <OBJECTS> -merge_archive -o <TARGET>")
+set(CMAKE_ASM_LINK_EXECUTABLE         "<CMAKE_C_COMPILER> <CMAKE_C_LINK_FLAGS>  <LINK_FLAGS> <OBJECTS> <LINK_LIBRARIES>  -o <TARGET> ")

@@ -1,0 +1,17 @@
+[settings]
+os=Neutrino
+os.version=7.0
+arch=armv8
+
+os_build=Linux
+arch_build=x86_64
+
+compiler=qcc
+compiler.version=5.4
+compiler.libcxx=cxx
+compiler.cppstd=11
+
+build_type=Release
+
+[build_requires]
+qnx7-aarch64-toolchain/7.0.4.202010@bosch/stable
